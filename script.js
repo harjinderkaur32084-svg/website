@@ -55,6 +55,11 @@
     installUI();
     if(localStorage.getItem("medicare_theme")==="dark")document.documentElement.classList.add("theme-dark");
     renderPage();
+    const pendingToast = sessionStorage.getItem("medicare_toast");
+    if(pendingToast){
+      setTimeout(() => window.HMSUI.toast(pendingToast), 300);
+      sessionStorage.removeItem("medicare_toast");
+    }
     document.addEventListener("click",(event)=>{
       if(event.target.closest("[data-close-modal]")){window.HMSUI.closeModal();return;}
       const button=event.target.closest("[data-shell-action]");

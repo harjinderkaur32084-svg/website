@@ -110,6 +110,7 @@
         if (!res.success) {
           error.textContent = res.error;
         } else {
+          sessionStorage.setItem("medicare_toast", "Account created successfully! Welcome to MediCare.");
           login(email, password);
           window.location.href = landing(HMS.currentUser);
         }
