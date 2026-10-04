@@ -4,6 +4,7 @@
   const config={
     dashboard:{title:"Overview",icon:"▦"},
     "doctor-dashboard":{title:"My workspace",icon:"▦"},
+    "patient-dashboard":{title:"Patient Portal",icon:"▦"},
     reception:{title:"Reception",icon:"⌂"},
     patients:{title:"Patients",icon:"♙"},
     doctors:{title:"Doctors",icon:"✚"},
@@ -14,12 +15,13 @@
   const navGroups={
     admin:[["WORKSPACE",["dashboard"]],["CARE MANAGEMENT",["patients","doctors","departments","appointments","prescriptions"]]],
     doctor:[["MY WORKSPACE",["doctor-dashboard","patients","appointments","prescriptions"]]],
-    receptionist:[["FRONT DESK",["reception","patients","appointments"]]]
+    receptionist:[["FRONT DESK",["reception","patients","appointments"]]],
+    patient:[["MY PORTAL",["patient-dashboard","appointments","prescriptions"]]]
   };
   function renderShell(user,page) {
-    const links=navGroups[user.role].map(([group,items])=>`<div class="nav-label">${group}</div><nav class="nav-links">${items.map((key)=>`<a class="nav-link ${key===page?"active":""}" href="${key==="dashboard"?"admin":key==="doctor-dashboard"?"doctor":key==="reception"?"receptionist":key}.html"><span class="nav-icon">${config[key].icon}</span><span>${config[key].title}</span></a>`).join("")}</nav>`).join("");
+    const links=navGroups[user.role].map(([group,items])=>`<div class="nav-label">${group}</div><nav class="nav-links">${items.map((key)=>`<a class="nav-link ${key===page?"active":""}" href="${key==="dashboard"?"admin":key==="doctor-dashboard"?"doctor":key==="patient-dashboard"?"patient":key==="reception"?"receptionist":key}.html"><span class="nav-icon">${config[key].icon}</span><span>${config[key].title}</span></a>`).join("")}</nav>`).join("");
     const initials=HMS.initials(user.name);
-    return `<div class="app"><aside class="sidebar" id="sidebar"><a class="brand" href="${user.role==="admin"?"admin":user.role==="doctor"?"doctor":"receptionist"}.html"><span class="brand-mark">✚</span><span>MediCare<small>HOSPITAL MANAGEMENT</small></span></a>${links}<div class="sidebar-bottom"><div class="secure-card"><strong>Demo environment</strong>Browser-stored sample records only. Not for real patient data.</div></div></aside><div class="workspace"><header class="topbar"><div class="topbar-left"><button class="icon-button mobile-only" data-shell-action="sidebar" aria-label="Open navigation">☰</button><div><div class="page-context">MediCare Hospital</div><div class="topbar-title">${e(config[page]?.title||"Workspace")}</div></div></div><div class="topbar-right"><button class="icon-button" id="theme-toggle-btn" data-shell-action="theme" title="Toggle theme" aria-label="Toggle light or dark mode">${localStorage.getItem("medicare_theme")==="dark"?"☀️":"🌙"}</button><button class="icon-button" data-shell-action="notifications" title="Notifications" aria-label="Notifications">♧</button><div class="profile-wrap"><span class="avatar">${e(initials)}</span><div class="profile-label"><div class="profile-name">${e(user.name)}</div><div class="profile-meta">${e(user.title||user.role)}</div></div><button class="icon-button" data-shell-action="profile" aria-label="Open profile menu">⌄</button><div class="profile-menu" id="profile-menu" hidden><button data-shell-action="profile-details">Signed in as ${e(user.role)}</button><button data-shell-action="logout">Sign out</button></div></div></div></header><main class="main-content" id="page-content"></main></div><div id="modal-root"></div><div class="toast-container" id="toast-container" aria-live="polite"></div></div>`;
+    return `<div class="app"><aside class="sidebar" id="sidebar"><a class="brand" href="${user.role==="admin"?"admin":user.role==="doctor"?"doctor":user.role==="patient"?"patient":"receptionist"}.html"><span class="brand-mark">✚</span><span>MediCare<small>HOSPITAL MANAGEMENT</small></span></a>${links}<div class="sidebar-bottom"><div class="secure-card"><strong>Demo environment</strong>Browser-stored sample records only. Not for real patient data.</div></div></aside><div class="workspace"><header class="topbar"><div class="topbar-left"><button class="icon-button mobile-only" data-shell-action="sidebar" aria-label="Open navigation">☰</button><div><div class="page-context">MediCare Hospital</div><div class="topbar-title">${e(config[page]?.title||"Workspace")}</div></div></div><div class="topbar-right"><button class="icon-button" id="theme-toggle-btn" data-shell-action="theme" title="Toggle theme" aria-label="Toggle light or dark mode">${localStorage.getItem("medicare_theme")==="dark"?"☀️":"🌙"}</button><button class="icon-button" data-shell-action="notifications" title="Notifications" aria-label="Notifications">♧</button><div class="profile-wrap"><span class="avatar">${e(initials)}</span><div class="profile-label"><div class="profile-name">${e(user.name)}</div><div class="profile-meta">${e(user.title||user.role)}</div></div><button class="icon-button" data-shell-action="profile" aria-label="Open profile menu">⌄</button><div class="profile-menu" id="profile-menu" hidden><button data-shell-action="profile-details">Signed in as ${e(user.role)}</button><button data-shell-action="logout">Sign out</button></div></div></div></header><main class="main-content" id="page-content"></main></div><div id="modal-root"></div><div class="toast-container" id="toast-container" aria-live="polite"></div></div>`;
   }
   function installUI() {
     window.HMSUI={
@@ -39,7 +41,7 @@
   function renderPage() {
     const root=document.getElementById("page-content"),page=document.body.dataset.page,user=HMS.currentUser;
     if(!root)return;
-    if(page==="dashboard"||page==="doctor-dashboard"||page==="reception")root.innerHTML=window.HMSRenderDashboard({page,user});
+    if(page==="dashboard"||page==="doctor-dashboard"||page==="patient-dashboard"||page==="reception")root.innerHTML=window.HMSRenderDashboard({page,user});
     else if(["patients","doctors","departments"].includes(page))root.innerHTML=window.HMSRenderDirectory(page);
     else if(page==="appointments")root.innerHTML=window.HMSRenderAppointments();
     else if(page==="prescriptions")root.innerHTML=window.HMSRenderPrescriptions();

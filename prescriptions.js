@@ -2,6 +2,7 @@
   "use strict";
   const e=HMS.escape;
   function visibleRecords(data,user) {
+    if (user.role === "patient") return data.prescriptions.filter(p => p.patientId === user.patientId);
     if (user.role !== "doctor") return data.prescriptions;
     const assignedDoctor = data.doctors.find(d => d.id === user.doctorId);
     return data.prescriptions.filter((p)=>p.department===assignedDoctor.department);

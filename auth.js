@@ -8,16 +8,21 @@
         username:doctor.username||doctor.email||`doctor${index+1}@medicare.demo`,
         password:doctor.password||"doctor123", role:"doctor", doctorId:doctor.id, name:doctor.name, title:doctor.specialization
       })),
+      ...(HMS.read().patients || []).map((p, index) => ({
+        username:p.email||`patient${index+1}@medicare.demo`,
+        password:p.password||"patient123", role:"patient", patientId:p.id, name:p.name, title:"Patient"
+      })),
       ...(HMS.read().users || [])
     ];
   }
-  const destinations = { admin:"admin.html", doctor:"doctor.html", receptionist:"receptionist.html" };
+  const destinations = { admin:"admin.html", doctor:"doctor.html", receptionist:"receptionist.html", patient:"patient.html" };
   const access = {
     admin:["dashboard","doctor-dashboard","reception","patients","doctors","departments","appointments","prescriptions"],
     doctor:["doctor-dashboard","patients","appointments","prescriptions"],
-    receptionist:["reception","patients","appointments"]
+    receptionist:["reception","patients","appointments"],
+    patient:["patient-dashboard","appointments","prescriptions"]
   };
-  function landing(user) { return user.role === "doctor" ? "doctor.html" : user.role === "receptionist" ? "receptionist.html" : "admin.html"; }
+  function landing(user) { return user.role === "doctor" ? "doctor.html" : user.role === "receptionist" ? "receptionist.html" : user.role === "patient" ? "patient.html" : "admin.html"; }
   function login(identity, password) {
     const account = accounts().find((item) => item.username.toLowerCase() === identity.trim().toLowerCase() && item.password === password);
     if (!account) return false;
@@ -42,15 +47,22 @@
     }
     const newUser = {
       username: email, password: password, role: role, name: name,
-      title: role === 'admin' ? 'Hospital Administrator' : role === 'receptionist' ? 'Receptionist' : 'Doctor'
+      title: role === 'admin' ? 'Hospital Administrator' : role === 'receptionist' ? 'Receptionist' : role === 'patient' ? 'Patient' : 'Doctor'
     };
     if (role === 'doctor') {
       const doctorId = HMS.nextId("doctors");
       data.doctors.push({
-        id: doctorId, name: name, department: "General Medicine", specialization: "General Physician",
+        id: doctorId, name: name, department: "Pediatrics", specialization: "General Physician",
         email: email, phone: "", timing: "09:00 AM - 05:00 PM", status: "Active", username: email, password: password
       });
       newUser.doctorId = doctorId;
+    } else if (role === 'patient') {
+      const patientId = HMS.nextId("patients");
+      data.patients.push({
+        id: patientId, name: name, email: email, phone: "", age: 30, gender: "Other", address: "", bloodGroup: "O+",
+        doctorId: data.doctors[0]?.id, department: data.doctors[0]?.department, registrationDate: HMS.today(), history: "None", allergies: "None", password: password
+      });
+      newUser.patientId = patientId;
     } else {
       data.users.push(newUser);
     }
