@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f7fb">
+  <title>Sign in · MediCare HMS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="responsive.css">
+<link rel="stylesheet" href="premium.css"></head>
+<body class="login-page">
+  <main class="login-shell">
+    <section class="login-art">
+      <a class="brand brand-light" href="index.html"><span class="brand-mark">✚</span><span>MediCare<small>HOSPITAL MANAGEMENT</small></span></a>
+      <div class="art-copy"><span class="eyebrow">CARE, CONNECTED</span><h1>Better care starts with a better view.</h1><p>A thoughtful workspace for the people who make exceptional care possible.</p></div>
+      <div class="login-art-bottom"><span>● Trusted care, every day</span><span>HIPAA-ready architecture*</span></div>
+    </section>
+    <section class="login-panel">
+      <div class="login-card">
+        <span class="eyebrow" id="auth-eyebrow">WELCOME BACK</span><h2 id="auth-heading">Sign in to your workspace</h2><p class="muted" id="auth-sub">Enter your demo account details to continue.</p>
+        <form id="login-form">
+          <label>Email or username<input id="login-identity" name="identity" autocomplete="username" placeholder="you@medicare.demo" required></label>
+          <label>Password<span class="password-field"><input id="login-password" name="password" type="password" autocomplete="current-password" placeholder="Enter your password" required><button class="password-toggle" id="toggle-password" type="button" aria-label="Show password">Show</button></span></label>
+          <div class="login-options"><label class="check-label"><input type="checkbox" id="remember-me"> Remember me</label><button type="button" class="text-button" id="forgot-password">Forgot password?</button></div>
+          <p id="login-error" class="form-error" aria-live="polite"></p>
+          <button class="button button-primary button-full" type="submit">Sign in <span>→</span></button>
+          <div style="text-align:center; margin-top:15px; font-size:12px;">Don't have an account? <button type="button" class="text-button" id="show-register">Create one</button></div>
+        </form>
+        
+        <form id="register-form" style="display:none;">
+          <label>Full Name<input id="reg-name" name="name" placeholder="John Doe" required></label>
+          <label>Email address<input id="reg-email" name="email" type="email" placeholder="you@medicare.demo" required></label>
+          <label>Password<input id="reg-password" name="password" type="password" placeholder="Choose a secure password" required></label>
+          <label>Role
+            <select id="reg-role" name="role" required style="width:100%; height:46px; margin-top:8px; padding:0 13px; border:1px solid #dfe6ee; border-radius:9px; outline:0; background:#fff;">
+              <option value="doctor">Doctor</option>
+              <option value="receptionist">Receptionist</option>
+              <option value="admin">Administrator</option>
+            </select>
+          </label>
+          <p id="reg-error" class="form-error" aria-live="polite"></p>
+          <button class="button button-primary button-full" type="submit" style="margin-top:15px">Create Account <span>→</span></button>
+          <div style="text-align:center; margin-top:15px; font-size:12px;">Already have an account? <button type="button" class="text-button" id="show-login">Sign in</button></div>
+        </form>
+        <p class="security-note" style="margin-top:20px;">Secure access restricted to authorized MediCare personnel only.</p>
+      </div>
+    </section>
+  </main>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script><script src="firebase-config.js"></script><script src="data.js"></script><script src="auth.js"></script>
+  <script>
+    document.getElementById('show-register').addEventListener('click', () => {
+      document.getElementById('login-form').style.display = 'none';
+      document.getElementById('register-form').style.display = 'block';
+      document.getElementById('auth-eyebrow').textContent = 'NEW ACCOUNT';
+      document.getElementById('auth-heading').textContent = 'Create your workspace';
+      document.getElementById('auth-sub').textContent = 'Sign up for a new role to get started.';
+    });
+    document.getElementById('show-login').addEventListener('click', () => {
+      document.getElementById('register-form').style.display = 'none';
+      document.getElementById('login-form').style.display = 'block';
+      document.getElementById('auth-eyebrow').textContent = 'WELCOME BACK';
+      document.getElementById('auth-heading').textContent = 'Sign in to your workspace';
+      document.getElementById('auth-sub').textContent = 'Enter your account details to continue.';
+    });
+  </script>
+</body>
+</html>
